@@ -1,90 +1,325 @@
-//Dijisktra Algorithm -> O(E logE)
+//shortest path using BFS
+
 #include<bits/stdc++.h>
 using namespace std;
 
 class Graph{
 
     public:
-    unordered_map<int , list<pair<int , int>>>adj;
-
-    void addEdge(int u , int v , int w){
-         adj[u].push_back({v,w});
-         adj[v].push_back({u,w});
+    unordered_map<int , list<int>>adj;
+    
+    void addEdge(int u , int v){
+         adj[u].push_back(v);
+         adj[v].push_back(u);
     }
 
-    void dijikstra(int src , vector<int>&dist){
+    void shortestPath(unordered_map<int  , bool>&visited , unordered_map<int  , int>&parent , int src){
 
-        //make the priority queue
-        priority_queue<pair<int,int> , vector<pair<int , int>> , greater<pair<int ,int>>>pq;
+          queue<int>q;
+          q.push(src);
 
-        pq.push({0 , src});
+          visited[src] = true;
+          parent[src] = -1;
 
-        while(!pq.empty()){
+          while(!q.empty()){
 
-            auto top = pq.top();
-            int node = top.second;
-            int wt_n = top.first;
+             int front = q.front();
+             q.pop();
 
-            pq.pop();
-            if(wt_n > dist[node]) continue;
-
-            for(auto neigh : adj[node]){
+             for(auto i : adj[front]){
                 
-                int v = neigh.first;
-                int w = neigh.second;
+                 if(!visited[i]){
+                     visited[i] = true;
+                     parent[i] = front;
+                     q.push(i);
+                 }
 
-                if(wt_n + w < dist[v]){
-                     dist[v] = wt_n + w;
-                     pq.push({dist[v] , v});
-                }
+             }
 
-            }
-
-
-        }
-
-
+          }
     }
-
-
 
 };
 
 int main(){
 
     int vertices;
-    cout <<"Enter the number of vertices"<< endl;
+    cout <<"Enter the vertices"<< endl;
     cin >> vertices;
 
     int edges;
-    cout <<"Enter the number of edges"<< endl;
+    cout <<"Enter the edges"<< endl;
     cin >> edges;
 
     Graph g;
-    int u , v,w;
-    cout <<"Enter the edge(u , v, w)"<< endl;
+    int u , v;
+    cout <<"Enter the edge(u ,v)"<< endl;
     for(int i = 0 ; i < edges ; i++){
-        cin >> u >> v >> w;
-        g.addEdge(u , v,w);
+         cin >> u >> v;
+         g.addEdge( u , v);
     }
-
-    vector<int>dist(vertices , INT_MAX);
 
     int src;
     cout <<"Enter the source node"<< endl;
     cin >> src;
 
-    dist[src] = 0;
+    int dest;
+    cout <<"Enter the destination node"<< endl;
+    cin >> dest;
 
-    g.dijikstra(src , dist );
+    //make the visited array
+    unordered_map<int  , bool>visited;
+    
+    //make the parent array
+    unordered_map<int , int>parent;
 
-    cout <<"Shortest Path"<< endl;
-    for(int i = 0 ; i < dist.size();i++){
-         cout << dist[i] <<" ";
+    g.shortestPath(visited , parent , src);
+
+    int currnode = dest;
+
+    vector<int>ans;
+    ans.push_back(dest);
+
+    while(currnode != src){
+          currnode = parent[currnode];
+          ans.push_back(currnode);
     }
 
+    reverse(ans.begin() , ans.end());
+
+    cout <<"Shortest PAth "<< endl;
+    for(int i = 0 ; i < ans.size() ; i++){
+          cout << ans[i] <<" ";
+    }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//cycle detection in directed graph using the DFS
+
+// #include<bits/stdc++.h>
+// using namespace std;
+
+// class Graph{
+
+//     public:
+//     unordered_map<int , list<int>>adj;
+
+//     //directed Graph
+//     void addEdge(int u , int v){  
+//         adj[u].push_back(v);
+//     }
+
+//     void topologicalSort(int node, stack<int>&st ,unordered_map<int , bool>&visited){
+
+//        visited[node] = true;
+
+//        for(auto neigh : adj[node]){
+
+//         if(!visited[neigh]){
+//              topologicalSort(neigh , st , visited);
+//         }
+
+//        }
+
+//        st.push(node);
+
+
+//     }
+
+  
+// };
+
+// int main(){
+
+//     int vertices;
+//     cout <<"Enter the number of vertices"<< endl;
+//     cin >> vertices;
+
+//     int edges;
+//     cout <<"Enter the number of edges"<< endl;
+//     cin >> edges;
+
+//     Graph g;
+
+//     int u , v;
+//     cout <<"Enter the edge( u, v)"<< endl;
+//     for(int i = 0 ; i < edges ; i++){
+//          cin >> u >> v;
+//          g.addEdge( u , v);
+//     }
+
+//     unordered_map<int , bool>visited;
+
+//     stack<int>st;
+//     g.topologicalSort(0 , st , visited);
+
+//     vector<int>ans;
+
+//     while(!st.empty()){
+//          ans.push_back(st.top());
+//          st.pop();
+//     }
+
+
+//     cout <<"Topological Sort"<< endl;
+//     for(int i = 0 ; i < ans.size() ; i++){
+//         cout << ans[i] <<" ";
+//     }
+
+//     cout << endl;
+
+
+
+// }
+
+
+
+
+
+// //cycle detection in undirected Graph
+
+// #include<bits/stdc++.h>
+// using namespace std;
+
+// class Graph{
+
+//     public:
+//     unordered_map<int , list<int>>adj;
+
+//     void addEdge(int u , int v){
+//           adj[u].push_back(v);
+//           adj[v].push_back(u);
+//     }
+
+
+
+//     //DFS
+//     bool cycle(int node,int parent ,  unordered_map<int , bool>&visited){
+
+//          visited[node] = true;
+        
+//          for(auto neigh : adj[node]){
+            
+//              if(!visited[neigh]){
+//                 if(cycle(neigh , node , visited)){
+//                     return true;
+//                 }
+//              }
+
+//              else if( neigh != parent){
+//                    return true;
+//              }
+
+//          }
+
+//          return false;
+             
+
+           
+//     }
+
+
+    // BFS
+    // bool cycle(int node, unordered_map<int , bool>&visited , unordered_map<int , int>&parent){
+
+    //      visited[node] = true;
+
+    //      queue<int>q;
+    //      q.push(node);
+
+
+    //      parent[node]= -1;
+
+    //      while(!q.empty()){
+
+    //          int frontNode = q.front();
+
+    //          q.pop();
+
+    //          for(auto neigh : adj[frontNode]){
+                 
+    //               if(!visited[neigh]){
+    //                   visited[neigh] = true;
+    //                   parent[neigh] = frontNode;
+    //                   q.push(neigh);
+    //               }
+
+    //               else if( neigh != parent[frontNode]){
+    //                  return true;
+    //               }
+
+    //          }
+
+    //      }
+
+    //       return false;
+    // }
+
+// };
+
+// int main(){
+
+//     int vertices;
+//     cout <<"Enter the number of vertices"<< endl;
+//     cin >> vertices;
+
+//     int edges;
+//     cout <<"Enter the number of edges"<< endl;
+//     cin >> edges;
+
+//     Graph g;
+
+//     int u , v;
+//     cout <<"Enter the edge(u , v)"<< endl;
+//     for(int i = 0 ; i < edges ; i++){
+//          cin >> u >> v;
+//          g.addEdge( u , v);
+//     }
+
+//     //make the visited array
+//     unordered_map<int , bool>visited;
+//     //make the parent array
+//     // unordered_map<int , int>parent;
+
+//     bool ans = false;
+
+//     for(int i = 0 ; i < vertices ; i++){
+        
+//          if(!visited[i]){
+//              if(g.cycle(i , -1 , visited )){
+//                  ans = true;
+//                  break;
+//              }
+//          }
+
+//     }
+
+//     if(ans){
+//          cout <<"Graph contains Cycle"<< endl;
+//     }
+//     else{
+//         cout <<"Graph does not contain Cycle"<< endl;
+//     }
+
+
+
+
+// }
+
 
 
 

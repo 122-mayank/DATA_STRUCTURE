@@ -25,6 +25,7 @@ bool isSafe(int row, int col, vector<vector<char>>& board, int size) {
     }
 
     return true;
+    
 }
 void solve(vector<vector<char>>&board , int row , int size ){
 
