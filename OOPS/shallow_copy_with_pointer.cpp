@@ -1,34 +1,29 @@
-#include<bits/stdc++.h>
+
+#include <bits/stdc++.h>
 using namespace std;
 
-class A{
+class Demo {
+public:
+    int* x;
 
-    public:
-    int *data;
-
-    A(int val){
-         data = new int;
-         *data = val;
-    }
-    
-    //Shallow Constructor
-    A(const A &obj){
-         data = obj.data;
+    Demo(int val) {
+        x = new int(val);
     }
 
-    void show(){
-        cout << *data << endl;
+    // Copy Constructor (Shallow Copy)
+    Demo(const Demo &d) {
+        x = d.x;  // Copies the address
     }
 };
 
-int main(){
+int main() {
+    Demo d1(10);
+    Demo d2 = d1;  // Shallow copy
 
-    A obj(10);
+    *d2.x = 20;
 
-    A obj2 = obj; //copy constructor
+    cout << "d1.x: " << *d1.x << endl;
+    cout << "d2.x: " << *d2.x << endl;
 
-    *obj2.data = 20;
-
-    obj.show();
-    obj2.show();
+    return 0;
 }

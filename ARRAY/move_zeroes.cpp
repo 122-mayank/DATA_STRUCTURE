@@ -24,7 +24,7 @@ for( int j = 0 ; j < size ; j++){
         i++;
     }
 }
-
+ 
 // printing the array
 cout <<"Move zeroes to last position: "<<endl;
 for( int i = 0 ; i < size ; i++){

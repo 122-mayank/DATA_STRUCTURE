@@ -61,7 +61,7 @@ public:
 
 int main() {
 
-    A* obj4 = new D("Rahul", 23, "DAA", "FA", 14);
+    D* obj4 = new D("Rahul", 23, "DAA", "FA", 14);
 
     cout << "Marks: " << obj4->marks << endl;
     cout << "Name: " << obj4->name << endl;
